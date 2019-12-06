@@ -1,0 +1,8 @@
+<div class="phx-hero">
+  <h2>Hello World, from <%= @messenger %>!</h2>
+  <form id="tweet-form">
+    <textarea id="message" rows="10" cols="30"></textarea>
+    <br>
+    <button type="submit">Tweet</button>
+</form>
+</div>

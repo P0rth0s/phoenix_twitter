@@ -1,0 +1,9 @@
+<section class="phx-hero">
+  <h1><%= gettext "Welcome to %{name}!", name: "My Twitter" %></h1>
+  <p>A way shittier version of twitter.</p>
+  <br>
+  <form id="login-form">
+    <input placeholder="Username" id="userName">
+    <button type="submit">Login</button>
+  </form>
+</section>
