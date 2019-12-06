@@ -23,7 +23,7 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
     payload = Map.put(payload, "tweet_id", val)
     Wrapper.create_tweet(payload)
     #TODO implement all this shit
-    #Helper.push_to_followers(payload)
+    Helper.push_to_followers(payload)
     #Helper.regex_hashtag(payload)
     #Helper.regex_mention(payload)
     {:reply, {:ok, payload}, socket}
@@ -37,4 +37,10 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
     {:reply, {:ok, payload}, socket}
   end
 
+  def handle_in("query_timeline", payload, socket) do
+    [{Users, _uid, _pid, _followers, timeline, _mentions}] = elem(Wrapper.get_user(elem(Map.fetch(payload, "name"), 1)), 1)
+    tweets = Helper.get_tweets_of_list(timeline)
+    IO.inspect(tweets) #Prints successfully convert to js
+    {:reply, {:ok, payload}, socket}
+  end
 end

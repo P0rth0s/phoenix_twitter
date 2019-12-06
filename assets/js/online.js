@@ -8,7 +8,7 @@ let online = {
         if(href == "http://localhost:4000/") {
             this.listenForLogin(channel)
         } else if(href.substring(0, 27) == "http://localhost:4000/user/") {
-            //this.queryTimeline(channel)
+            this.queryTimeline(channel)
             this.listenForTweet(channel)
             this.listenForFollow(channel)
         }
@@ -32,12 +32,13 @@ let online = {
         document.getElementById('tweet-form').addEventListener('submit', function(e) {
             e.preventDefault()
             let message = document.getElementById('message').value
+            message = 'temp hardcoded message online.js line 35'
             name = window.location.href.split('/')[4]
             channel.push('tweet', {msg: message, uid: name}).receive(
                 "ok", (reply) =>
                     console.log('received')
             )
-            document.getElementById('message').value = ''
+            //document.getElementById('message').value = ''
         })
     },
 
@@ -52,12 +53,17 @@ let online = {
                 "ok", (reply) =>
                     console.log('follow completed')
             )
-            document.getElementById('message').value = ''
+            //document.getElementById('message').value = ''
         })
     },
 
     queryTimeline(channel) {
-        channel.push('queryTimeline', {name: userName})
+        name = window.location.href.split('/')[4]
+        channel.push('query_timeline', {name: name}).receive(
+            "ok", (reply) =>
+                console.log("queried tweets: " + JSON.stringify(reply))
+                //TODO append replies to timeline table
+        )
     }
 }
 

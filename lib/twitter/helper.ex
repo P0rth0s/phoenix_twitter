@@ -2,8 +2,8 @@ defmodule Helper do
 
   # Add tweet to all of the tweeters followers timelines
   def push_to_followers(tweet) do
-    tweet_id = elem(Map.fetch(tweet, :tweet_id), 1)
-    [{Users, _uid, _pid, followers, _timeline, _mentions}] = elem(Wrapper.get_user(elem(Map.fetch(tweet, :uid), 1)), 1)
+    tweet_id = elem(Map.fetch(tweet, "tweet_id"), 1)
+    [{Users, _uid, _pid, followers, _timeline, _mentions}] = elem(Wrapper.get_user(elem(Map.fetch(tweet, "uid"), 1)), 1)
     push_to_followers(followers, tweet_id)
   end
   def push_to_followers([], _tweet_id) do :done end

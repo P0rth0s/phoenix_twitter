@@ -54,7 +54,7 @@ defmodule Wrapper do # wraps a centralized ETS instance
     :mnesia.transaction( fn -> :mnesia.delete({Users, uid, :_, :_, :_, :_}) end)
     timeline = [tweet_id | timeline]
     :mnesia.transaction( fn -> :mnesia.write({Users, uid, pid, followers, timeline, mentions}) end)
-    Helper.push_live(pid, tweet_id)
+    #Helper.push_live(pid, tweet_id)
   end
 
   def add_mention(uid, tweet_id) do
@@ -62,16 +62,16 @@ defmodule Wrapper do # wraps a centralized ETS instance
     :mnesia.transaction( fn -> :mnesia.delete({Users, uid, :_, :_, :_, :_}) end)
     mentions = [tweet_id | mentions]
     :mnesia.transaction( fn -> :mnesia.write({Users, uid, pid, followers, timeline, mentions}) end)
-    Helper.push_live(pid, tweet_id)
+    #Helper.push_live(pid, tweet_id)
   end
 
   def get_user(uid) do :mnesia.transaction( fn -> :mnesia.match_object({Users, uid, :_, :_, :_, :_}) end) end
 
   # Manipulate Tweets table
   def create_tweet(tweet) do
-    tweet_id = elem(Map.fetch(tweet, :tweet_id), 1)
-    uid = elem(Map.fetch(tweet, :uid), 1)
-    msg = elem(Map.fetch(tweet, :msg), 1)
+    tweet_id = elem(Map.fetch(tweet, "tweet_id"), 1)
+    uid = elem(Map.fetch(tweet, "uid"), 1)
+    msg = elem(Map.fetch(tweet, "msg"), 1)
     :mnesia.transaction(fn -> :mnesia.write({Tweets, tweet_id, uid, msg}) end)
   end
 
