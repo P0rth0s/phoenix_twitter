@@ -1,5 +1,9 @@
 <div class="phx-hero">
-  <h2>Hello World, from <%= @messenger %>!</h2>
+  <h2>Hello <%= @messenger %></h2>
+  <form id="follow-form">
+    <p>Follow Users By Name: </p><input id="message">
+    <button type="submit">Subscribe</button>
+  </form>
   <form id="tweet-form">
     <textarea id="message" rows="10" cols="30"></textarea>
     <br>
