@@ -34,7 +34,7 @@ let online = {
         document.getElementById('tweet-form').addEventListener('submit', (e) => {
             e.preventDefault()
             let message = document.getElementById('message').value
-            message = 'temp hardcoded message online.js line 35 @w'
+            message = 'temp hardcoded message online.js line 35 @w #test'
             name = window.location.href.split('/')[4].replace('?', '')
             channel.push('tweet', {msg: message, uid: name}).receive(
                 "ok", (reply) =>

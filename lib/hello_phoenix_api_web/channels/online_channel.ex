@@ -24,7 +24,7 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
     Wrapper.create_tweet(payload)
     #TODO implement all this shit
     Helper.push_to_followers(payload)
-    #Helper.regex_hashtag(payload)
+    Helper.regex_hashtag(payload)
     Helper.regex_mention(payload)
     {:reply, {:ok, payload}, socket}
   end
@@ -59,6 +59,7 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
         IO.inspect(tweets)
         {:reply, {:ok, payload}, socket}
       _ ->
+        IO.inspect("No hashtag found")
         {:reply, {:ok, payload}, socket}
     end
   end
