@@ -25,7 +25,7 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
     #TODO implement all this shit
     Helper.push_to_followers(payload)
     #Helper.regex_hashtag(payload)
-    #Helper.regex_mention(payload)
+    Helper.regex_mention(payload)
     {:reply, {:ok, payload}, socket}
   end
 
@@ -40,7 +40,7 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
   def handle_in("query_timeline", payload, socket) do
     [{Users, _uid, _pid, _followers, timeline, _mentions}] = elem(Wrapper.get_user(elem(Map.fetch(payload, "name"), 1)), 1)
     tweets = Helper.get_tweets_of_list(timeline)
-    IO.inspect(tweets) #Prints successfully convert to js
+    IO.inspect(tweets) #TODO Prints successfully convert to js reply for all these
     {:reply, {:ok, payload}, socket}
   end
 
@@ -52,6 +52,14 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
   end
 
   def handle_in("query_hashtags", payload, socket) do
-    {:reply, {:ok, payload}, socket}
+    res = elem(Wrapper.query_hashtag(payload["hashtag"]), 1)
+    case res do
+      [{Hashtags, _hashtag, hashtag_tweet_ids}] ->
+        tweets = Helper.get_tweets_of_list(hashtag_tweet_ids)
+        IO.inspect(tweets)
+        {:reply, {:ok, payload}, socket}
+      _ ->
+        {:reply, {:ok, payload}, socket}
+    end
   end
 end

@@ -38,6 +38,7 @@ defmodule Helper do
   end
 
   def regex_mention(tweet) do
+    IO.inspect("***")
     IO.inspect(tweet)
     msg = elem(Map.fetch(tweet, "msg"), 1)
     case Regex.scan(~r/@[a-zA-z0-9]+/, msg) do
