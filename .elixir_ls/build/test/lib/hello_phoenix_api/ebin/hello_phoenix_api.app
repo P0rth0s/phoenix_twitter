@@ -3,7 +3,7 @@
                              gettext,jason,phoenix_pubsub,phoenix_html,
                              plug_cowboy,phoenix]},
               {description,"hello_phoenix_api"},
-              {modules,['Elixir.Engine','Elixir.HelloPhoenixApi',
+              {modules,['Elixir.HelloPhoenixApi',
                         'Elixir.HelloPhoenixApi.Application',
                         'Elixir.HelloPhoenixApiWeb',
                         'Elixir.HelloPhoenixApiWeb.ChannelCase',

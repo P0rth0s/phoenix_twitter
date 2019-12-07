@@ -11,7 +11,7 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
     transport_pid = elem(Map.fetch(socket, :transport_pid), 1)
     name = payload["name"]
     user = %{uid: name, pid: transport_pid}
-    Engine.login(user)
+    Wrapper.create_user(user)
     {:reply, {:ok, payload}, socket}
   end
 
@@ -22,7 +22,6 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
     val = Enum.random(0 .. 1000)
     payload = Map.put(payload, "tweet_id", val)
     Wrapper.create_tweet(payload)
-    #TODO implement all this shit
     Helper.push_to_followers(payload)
     Helper.regex_hashtag(payload)
     Helper.regex_mention(payload)
