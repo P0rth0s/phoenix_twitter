@@ -65,12 +65,21 @@ defmodule Helper do
     add_hashtags(tl, tweet_id)
   end
 
-  def push_live(pid, tweet_id) do
+  def push_live_timeline(pid, tweet_id) do
     case pid do
       nil -> :done
       _ ->
-        tweet = Wrapper.get_tweet(tweet_id)
-        Client.receive_live_tweet(pid, tweet)
+        _tweet = Wrapper.get_tweet(tweet_id)
+        HelloPhoenixApiWeb.Endpoint.broadcast(pid, "timeline_push", %{msg: "hello world"})
+    end
+  end
+
+  def push_live_mention(pid, tweet_id) do
+    case pid do
+      nil -> :done
+      _ ->
+        _tweet = Wrapper.get_tweet(tweet_id)
+        HelloPhoenixApiWeb.Endpoint.broadcast(pid, "mention_push", %{msg: "hello world"})
     end
   end
 

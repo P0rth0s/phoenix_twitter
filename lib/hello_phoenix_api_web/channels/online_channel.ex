@@ -1,22 +1,33 @@
 defmodule HelloPhoenixApiWeb.OnlineChannel do
   use HelloPhoenixApiWeb, :channel
 
-  def join("online:lobby", _payload, socket) do
-    {:ok, socket}
+  def join(channel, payload, socket) do
+    IO.inspect('PAYLOAD')
+    IO.inspect(payload)
+    name = payload["name"]
+    case channel do
+      "online:lobby" ->
+        join(Enum.join(["online:", name]), %{}, socket)
+        {:ok, socket}
+      _ ->
+         {:ok, socket}
+    end
   end
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
   def handle_in("login", payload, socket) do
-    transport_pid = elem(Map.fetch(socket, :transport_pid), 1)
+    IO.inspect(socket)
     name = payload["name"]
-    user = %{uid: name, pid: transport_pid}
+    private_channel = Enum.join(["online:", name])
+    user = %{uid: name, pid: private_channel}
+    #Wrapper.delete_user(user) #reroute pid socket pid info
     Wrapper.create_user(user)
+    IO.inspect("LOGIN")
     {:reply, {:ok, payload}, socket}
   end
 
   def handle_in("tweet", payload, socket) do
-    #TODO FIX socket pid changes from login
     #TODO fix tweet id assignment
     IO.inspect(payload)
     val = Enum.random(0 .. 1000)

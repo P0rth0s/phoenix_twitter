@@ -1,33 +1,45 @@
 let online = {
 
     init(socket) {
-        let channel = socket.channel('online:lobby', {})
         console.log(socket)
         let href = window.location.href
-        channel.join()
         if(href == "http://localhost:4000/") {
-            this.listenForLogin(channel)
+            this.listenForLogin()
         } else if(href.substring(0, 27) == "http://localhost:4000/user/") {
-            this.queryTimeline(channel)
+            let name = window.location.href.split('/')[4].replace('?', '')
+            let channela = socket.channel('online:lobby', {name: name})
+            channela.join()
+            let channel = socket.channel('online:'+name, {name: name})
+            channel.join()
+            this.login(channel)
             this.listenForTweet(channel)
             this.listenForFollow(channel)
             this.listenButtons(channel)
             this.listenHashtag(channel)
+            this.listenPushes(channel)
         }
     },
 
-    listenForLogin(channel) {
+    listenForLogin() {
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault()
             let userName = document.getElementById('userName').value
-            console.log(userName)
+            window.location.href = "http://localhost:4000/user/" + userName
+        })
+    },
+
+    login(channel) {
+        let t = this
+        window.onload= function(){
+            let userName = window.location.href.split('/')[4].replace('?', '')
             channel.push('login', {name: userName}).receive(
                 "ok", (reply) => {
-                    window.location.href = "http://localhost:4000/user/" + userName }
-                
+                    console.log("logged in")
+                    t.queryTimeline(channel)
+                }
                 //TODO add err for already exist
             )
-        })
+        }
     },
 
     listenForTweet(channel) {
@@ -108,6 +120,15 @@ let online = {
                 //TODO fix replies so can receive
                 //TODO append replies to timeline table
         )
+    },
+
+    listenPushes(channel) {
+        channel.on("mention_push", payload => {
+            console.log("received mention push")
+        })
+        channel.on("timeline_push", payload => {
+            console.log("recevied timeline push")
+        })
     }
 }
 

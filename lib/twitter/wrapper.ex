@@ -14,6 +14,7 @@ defmodule Wrapper do # wraps a centralized ETS instance
   def create_user(user) do
     uid = elem(Map.fetch(user, :uid), 1)
     pid = elem(Map.fetch(user, :pid), 1)
+    IO.inspect(pid)
     user = elem(get_user(uid), 1)
     case user do
       [] ->
@@ -21,14 +22,9 @@ defmodule Wrapper do # wraps a centralized ETS instance
         :mnesia.transaction( fn -> :mnesia.match_object({Users, uid, :_, :_, :_, :_}) end)
         :created
       [{Users, uid, pid, followers, timeline, mentions}] ->
-        case pid do
-          nil ->
-            :mnesia.transaction( fn -> :mnesia.delete({Users, uid, :_, :_, :_, :_}) end)
-            :mnesia.transaction( fn ->  :mnesia.write({Users, uid, pid, followers, timeline, mentions}) end)
-            :signed_in
-          _ ->
-            :error_user_already_exist
-        end
+        :mnesia.transaction( fn -> :mnesia.delete({Users, uid, :_, :_, :_, :_}) end)
+        :mnesia.transaction( fn ->  :mnesia.write({Users, uid, pid, followers, timeline, mentions}) end)
+        :signed_in
       _ ->
         :err
     end
@@ -54,7 +50,7 @@ defmodule Wrapper do # wraps a centralized ETS instance
     :mnesia.transaction( fn -> :mnesia.delete({Users, uid, :_, :_, :_, :_}) end)
     timeline = [tweet_id | timeline]
     :mnesia.transaction( fn -> :mnesia.write({Users, uid, pid, followers, timeline, mentions}) end)
-    #Helper.push_live(pid, tweet_id)
+    Helper.push_live_timeline(pid, tweet_id)
   end
 
   def add_mention(uid, tweet_id) do
@@ -62,7 +58,7 @@ defmodule Wrapper do # wraps a centralized ETS instance
     :mnesia.transaction( fn -> :mnesia.delete({Users, uid, :_, :_, :_, :_}) end)
     mentions = [tweet_id | mentions]
     :mnesia.transaction( fn -> :mnesia.write({Users, uid, pid, followers, timeline, mentions}) end)
-    #Helper.push_live(pid, tweet_id)
+    Helper.push_live_mention(pid, tweet_id)
   end
 
   def get_user(uid) do :mnesia.transaction( fn -> :mnesia.match_object({Users, uid, :_, :_, :_, :_}) end) end
