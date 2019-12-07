@@ -43,4 +43,15 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
     IO.inspect(tweets) #Prints successfully convert to js
     {:reply, {:ok, payload}, socket}
   end
+
+  def handle_in("query_mentions", payload, socket) do
+    [{Users, _uid, _pid, _followers, _timeline, mentions}] = elem(Wrapper.get_user(elem(Map.fetch(payload, "name"), 1)), 1)
+    tweets = Helper.get_tweets_of_list(mentions)
+    IO.inspect(tweets)
+    {:reply, {:ok, payload}, socket}
+  end
+
+  def handle_in("query_hashtags", payload, socket) do
+    {:reply, {:ok, payload}, socket}
+  end
 end

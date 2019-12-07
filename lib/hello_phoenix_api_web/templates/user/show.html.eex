@@ -9,6 +9,14 @@
     <br>
     <button type="submit">Tweet</button>
   </form>
-  <table id="timeline">
+  <br><br>
+  <form id="hashtag-form">
+    <p>Search by Hashtag: </p><input id="hashtag">
+    <button type="submit">Search</button>
+  </form>
+  <button id="timeline-button">Timeline</button>
+  <button id="mentions-button">Mentions</button>
+  <p id="tweet_table_type">Timeline</p>
+  <table id="tweet_table">
   </table>
 </div>

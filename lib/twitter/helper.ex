@@ -26,8 +26,8 @@ defmodule Helper do
   end
 
   def regex_hashtag(tweet) do
-    msg = elem(Map.fetch(tweet, :msg), 1)
-    tweet_id = elem(Map.fetch(tweet, :tweet_id), 1)
+    msg = elem(Map.fetch(tweet, "msg"), 1)
+    tweet_id = elem(Map.fetch(tweet, "tweet_id"), 1)
     case Regex.scan(~r/#[a-zA-z0-9]+/, msg) do
       nil->
         :no_match
@@ -38,7 +38,8 @@ defmodule Helper do
   end
 
   def regex_mention(tweet) do
-    msg = elem(Map.fetch(tweet, :msg), 1)
+    IO.inspect(tweet)
+    msg = elem(Map.fetch(tweet, "msg"), 1)
     case Regex.scan(~r/@[a-zA-z0-9]+/, msg) do
       nil->
         :no_match
@@ -51,7 +52,7 @@ defmodule Helper do
   # NOTE : Assumes only valid mentions
   def add_mentions([], _tweet) do :done end
   def add_mentions([hd | tl], tweet) do
-    tweet_id = elem(Map.fetch(tweet, :tweet_id), 1)
+    tweet_id = elem(Map.fetch(tweet, "tweet_id"), 1)
     uid = String.slice(hd, 1, String.length(hd))
     Wrapper.add_mention(uid, tweet_id)
     add_mentions(tl, tweet)
