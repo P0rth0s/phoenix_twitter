@@ -45,8 +45,7 @@ let online = {
     listenForTweet(channel) {
         document.getElementById('tweet-form').addEventListener('submit', (e) => {
             e.preventDefault()
-            let message = document.getElementById('message').value
-            message = 'temp hardcoded message online.js line 35 @w #test'
+            let message = document.getElementById('message_tweet').value
             name = window.location.href.split('/')[4].replace('?', '')
             channel.push('tweet', {msg: message, uid: name}).receive(
                 "ok", (reply) =>
@@ -132,13 +131,13 @@ let online = {
         channel.on("mention_push", payload => {
             console.log("got mention push")
             if(document.getElementById("tweet_table_type").innerHTML == "Mentions") {
-                t.add_row(table, payload["tweet"])
+                t.add_row(table, payload["tweet"].pop())
             }
         })
         channel.on("timeline_push", payload => {
             if(document.getElementById("tweet_table_type").innerHTML == "Timeline") {
                 console.log("got timeline push")
-                t.add_row(table, payload["tweet"])
+                t.add_row(table, payload["tweet"].pop())
             }
         })
     },

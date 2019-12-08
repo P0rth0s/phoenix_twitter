@@ -5,7 +5,7 @@
     <button type="submit">Subscribe</button>
   </form>
   <form id="tweet-form">
-    <textarea name="message" rows="10" cols="30"></textarea>
+    <textarea id="message_tweet" rows="10" cols="30"></textarea>
     <br>
     <button type="submit">Tweet</button>
   </form>
