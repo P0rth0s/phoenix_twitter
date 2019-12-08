@@ -69,8 +69,9 @@ defmodule Helper do
     case pid do
       nil -> :done
       _ ->
-        _tweet = Wrapper.get_tweet(tweet_id)
-        HelloPhoenixApiWeb.Endpoint.broadcast(pid, "timeline_push", %{msg: "hello world"})
+        tweet = Wrapper.get_tweet(tweet_id)
+        tweet = Helper.js_sanatize([tweet])
+        HelloPhoenixApiWeb.Endpoint.broadcast(pid, "timeline_push", %{"tweet" => tweet})
     end
   end
 
@@ -78,9 +79,18 @@ defmodule Helper do
     case pid do
       nil -> :done
       _ ->
-        _tweet = Wrapper.get_tweet(tweet_id)
-        HelloPhoenixApiWeb.Endpoint.broadcast(pid, "mention_push", %{msg: "hello world"})
+        tweet = Wrapper.get_tweet(tweet_id)
+        tweet = Helper.js_sanatize([tweet])
+        HelloPhoenixApiWeb.Endpoint.broadcast(pid, "mention_push", %{"tweet" => tweet})
     end
   end
 
+  def js_sanatize(tweets) do js_sanatize(tweets, []) end
+  def js_sanatize([], sanatized) do sanatized end
+  def js_sanatize([hd | tl], sanatized) do
+    {:atomic, [{Tweets, my_tweet_id, my_uid, my_msg}]} = hd
+    map = %{"tweet_id" => my_tweet_id, "uid" => my_uid, "msg" => my_msg}
+    sanatized = [map | sanatized]
+    js_sanatize(tl, sanatized)
+  end
 end

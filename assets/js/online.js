@@ -94,41 +94,80 @@ let online = {
     },
 
     queryTimeline(channel) {
+        let t = this
         name = window.location.href.split('/')[4].replace('?', '')
         channel.push('query_timeline', {name: name}).receive(
-            "ok", (reply) =>
-                console.log("queried tweets: " + JSON.stringify(reply))
-                //TODO fix replies so can receive
-                //TODO append replies to timeline table
+            "ok", (reply) => {
+                let tweets = reply["tweets"]
+                t.replace_table(tweets)
+            }
         )
     },
 
     queryMentions(channel) {
+        let t = this
         name = window.location.href.split('/')[4].replace('?', '')
         channel.push('query_mentions', {name: name}).receive(
-            "ok", (reply) =>
+            "ok", (reply) => {
                 console.log("queried mentions: " + JSON.stringify(reply))
-                //TODO fix replies so can receive
-                //TODO append replies to timeline table
+                let tweets = reply["tweets"]
+                t.replace_table(tweets)
+            }
         )
     },
 
     queryHashtags(channel, hashtag) {
         channel.push('query_hashtags', {hashtag: hashtag}).receive(
-            "ok", (reply) =>
+            "ok", (reply) => {
                 console.log("queried hashtag: " + JSON.stringify(reply))
-                //TODO fix replies so can receive
-                //TODO append replies to timeline table
+                let tweets = reply["tweets"]
+                replace_table(tweets)
+            }
         )
     },
 
     listenPushes(channel) {
+        let t = this
+        let table = document.getElementById("tweet_table");
         channel.on("mention_push", payload => {
-            console.log("received mention push")
+            console.log("got mention push")
+            if(document.getElementById("tweet_table_type").innerHTML == "Mentions") {
+                t.add_row(table, payload["tweet"])
+            }
         })
         channel.on("timeline_push", payload => {
-            console.log("recevied timeline push")
+            if(document.getElementById("tweet_table_type").innerHTML == "Timeline") {
+                console.log("got timeline push")
+                t.add_row(table, payload["tweet"])
+            }
         })
+    },
+
+    replace_table(tweets) {
+        let table = document.getElementById("tweet_table");
+        while(table.hasChildNodes()) {
+            table.removeChild(table.firstChild)
+        }
+        let row = table.insertRow(-1)
+        let cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        cell1.innerHTML = "User";
+        cell2.innerHTML = "Message";
+        while(tweets.length != 0) {
+            let top = tweets.pop()
+            this.add_row(table, top)
+        }
+        console.log('table created')
+    },
+
+    add_row(table, tweet){
+        console.log(tweet)
+        let row = table.insertRow(-1)
+        let cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        cell1.innerHTML = tweet["uid"];
+        cell2.innerHTML = tweet["msg"];
+        return null
     }
 }
 

@@ -50,15 +50,15 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
   def handle_in("query_timeline", payload, socket) do
     [{Users, _uid, _pid, _followers, timeline, _mentions}] = elem(Wrapper.get_user(elem(Map.fetch(payload, "name"), 1)), 1)
     tweets = Helper.get_tweets_of_list(timeline)
-    IO.inspect(tweets) #TODO Prints successfully convert to js reply for all these
-    {:reply, {:ok, payload}, socket}
+    tweets = Helper.js_sanatize(tweets)
+    {:reply, {:ok, %{"tweets" => tweets}}, socket}
   end
 
   def handle_in("query_mentions", payload, socket) do
     [{Users, _uid, _pid, _followers, _timeline, mentions}] = elem(Wrapper.get_user(elem(Map.fetch(payload, "name"), 1)), 1)
     tweets = Helper.get_tweets_of_list(mentions)
-    IO.inspect(tweets)
-    {:reply, {:ok, payload}, socket}
+    tweets = Helper.js_sanatize(tweets)
+    {:reply, {:ok, %{"tweets" => tweets}}, socket}
   end
 
   def handle_in("query_hashtags", payload, socket) do
@@ -66,11 +66,11 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
     case res do
       [{Hashtags, _hashtag, hashtag_tweet_ids}] ->
         tweets = Helper.get_tweets_of_list(hashtag_tweet_ids)
-        IO.inspect(tweets)
-        {:reply, {:ok, payload}, socket}
+        tweets = Helper.js_sanatize(tweets)
+        {:reply, {:ok, %{"tweets" => tweets}}, socket}
       _ ->
         IO.inspect("No hashtag found")
-        {:reply, {:ok, payload}, socket}
+        {:reply, {:none, payload}, socket}
     end
   end
 end
