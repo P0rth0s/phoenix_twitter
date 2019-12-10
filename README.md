@@ -1,19 +1,31 @@
-# HelloPhoenixApi
+# Project 4
+Harry Deffebach
+Alex Banard
 
-To start your Phoenix server:
+# Run
+Make sure Mnesia folder is deleted
+Run with mix phx.server
+Go to localhost:4000
 
-  * Install dependencies with `mix deps.get`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
+# What works
+Register
+Delete - remove active session
+Follow
+Tweet
+Mentions
+Hashtags
+Live Pushes for mentions and timeline
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+# Testing
+I didnt have a chance to write tests for the new version of the project.
+However tests can be viewed in the 4.1 project submission.
+These tests will not pass here because of changes of certain map keys from atoms to string values.
+Engine has also been removed and its functionality moved to the online_channel module.
+However all functionality remains the same.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+# Simulation
+I didnt know how to convert my simulation from genserver to channels.
+Simulation can be found in project 4.1 submission.
+It includes "celebrity users" with more followers.
+It automatically runs when program is ran.
+Note: an error is printed despite program running

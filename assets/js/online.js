@@ -87,7 +87,7 @@ let online = {
         document.getElementById('hashtag-form').addEventListener('submit', (e) => {
             e.preventDefault()
             let hashtag = document.getElementById('hashtag').value
-            document.getElementById("tweet_table_type").innerHTML = hashtag;
+            document.getElementById("tweet_table_type").innerHTML = "Hashtag: " + hashtag;
             t.queryHashtags(channel, hashtag)
         })
     },
@@ -116,11 +116,12 @@ let online = {
     },
 
     queryHashtags(channel, hashtag) {
+        let t = this
         channel.push('query_hashtags', {hashtag: hashtag}).receive(
             "ok", (reply) => {
                 console.log("queried hashtag: " + JSON.stringify(reply))
                 let tweets = reply["tweets"]
-                replace_table(tweets)
+                t.replace_table(tweets)
             }
         )
     },
