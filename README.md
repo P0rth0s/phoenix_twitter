@@ -1,6 +1,5 @@
 # Project 4
 Harry Deffebach
-Alex Banard
 
 # Run
 Make sure Mnesia folder is deleted
