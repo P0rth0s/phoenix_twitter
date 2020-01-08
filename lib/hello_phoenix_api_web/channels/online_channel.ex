@@ -17,47 +17,27 @@ defmodule HelloPhoenixApiWeb.OnlineChannel do
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
   def handle_in("login", payload, socket) do
-    IO.inspect(socket)
-    name = payload["name"]
-    private_channel = Enum.join(["online:", name])
-    user = %{uid: name, pid: private_channel}
-    #Wrapper.delete_user(user) #reroute pid socket pid info
-    Wrapper.create_user(user)
-    IO.inspect("LOGIN")
+    Engine.login(payload)
     {:reply, {:ok, payload}, socket}
   end
 
   def handle_in("tweet", payload, socket) do
-    #TODO fix tweet id assignment
-    IO.inspect(payload)
-    val = Enum.random(0 .. 1000)
-    payload = Map.put(payload, "tweet_id", val)
-    Wrapper.create_tweet(payload)
-    Helper.push_to_followers(payload)
-    Helper.regex_hashtag(payload)
-    Helper.regex_mention(payload)
+    payload = Engine.tweet(payload)
     {:reply, {:ok, payload}, socket}
   end
 
   def handle_in("follow", payload, socket) do
-    IO.inspect(payload)
-    uid_origin = payload["uid_origin"]
-    uid_follow = payload["uid_follow"]
-    Wrapper.add_follower(uid_origin, uid_follow)
+    Engine.follow(payload)
     {:reply, {:ok, payload}, socket}
   end
 
   def handle_in("query_timeline", payload, socket) do
-    [{Users, _uid, _pid, _followers, timeline, _mentions}] = elem(Wrapper.get_user(elem(Map.fetch(payload, "name"), 1)), 1)
-    tweets = Helper.get_tweets_of_list(timeline)
-    tweets = Helper.js_sanatize(tweets)
+    tweets = Engine.query_timeline(payload)
     {:reply, {:ok, %{"tweets" => tweets}}, socket}
   end
 
   def handle_in("query_mentions", payload, socket) do
-    [{Users, _uid, _pid, _followers, _timeline, mentions}] = elem(Wrapper.get_user(elem(Map.fetch(payload, "name"), 1)), 1)
-    tweets = Helper.get_tweets_of_list(mentions)
-    tweets = Helper.js_sanatize(tweets)
+    tweets = Engine.query_mentions(payload)
     {:reply, {:ok, %{"tweets" => tweets}}, socket}
   end
 
